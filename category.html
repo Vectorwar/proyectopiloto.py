@@ -1,0 +1,355 @@
+<!-- templates/category.html -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ category|capitalize }} - Pixie EES</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #6B3FA0;
+            --secondary-color: #FF6B9A;
+            --background-color: #F9F9F9;
+            --text-color: #333333;
+            --card-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            --button-hover: #5C35A4;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            padding-bottom: 70px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            position: relative;
+        }
+
+        .back-button {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            z-index: 10;
+        }
+
+        .cart-icon {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .cart-badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background-color: #FF3B30;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 0 15px;
+        }
+
+        .category-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+        }
+
+        .service-list {
+            margin-top: 20px;
+        }
+
+        .service-item {
+            background-color: white;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+            transition: transform 0.3s;
+            cursor: pointer;
+        }
+
+        .service-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+
+        .service-content {
+            padding: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .service-icon {
+            background-color: var(--primary-color);
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-size: 24px;
+        }
+
+        .service-info {
+            flex: 1;
+        }
+
+        .service-name {
+            font-weight: bold;
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+
+        .service-description {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .service-rating {
+            color: #FFD700;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+
+        .service-price {
+            color: var(--primary-color);
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .service-action {
+            display: flex;
+            justify-content: space-between;
+            border-top: 1px solid #eee;
+            padding: 10px 15px;
+        }
+
+        .view-details {
+            color: var(--primary-color);
+            font-weight: 500;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+
+        .view-details i {
+            margin-left: 5px;
+        }
+
+        .add-to-cart {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 8px 15px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .add-to-cart:hover {
+            background-color: var(--button-hover);
+        }
+
+        .footer {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background-color: white;
+            display: flex;
+            justify-content: space-around;
+            padding: 12px 0;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+            z-index: 100;
+        }
+
+        .footer-icon {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 20px;
+            color: #888;
+            cursor: pointer;
+            transition: color 0.3s;
+            text-decoration: none;
+        }
+
+        .footer-icon.active {
+            color: var(--primary-color);
+        }
+
+        .footer-text {
+            font-size: 12px;
+            margin-top: 4px;
+        }
+
+        .success-message {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+            z-index: 1000;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <a href="{{ url_for('home') }}" class="back-button">
+            <i class="fas fa-arrow-left"></i>
+        </a>
+        <h1> Pixie EES </h1>
+        <a href="{{ url_for('view_cart') }}" class="cart-icon">
+            <i class="fas fa-shopping-cart"></i>
+            {Pagar con tarjeta}
+            <span class="cart-badge">{{ cart_count }}</span>
+            {% endif %}
+        </a>
+    </div>
+
+    <div class="container">
+        <div class="category-title">Servicios de  Pixie EES</div>
+
+        <div class="service-list">
+            {Tu evento a tu servicios}
+            <div class="service-item" id="service-{{ service.id }}">
+                <div class="service-content" onclick="window.location='{{ url_for('service_detail', service_id=service.id) }}'">
+                    <div class="service-icon">
+                        <i class="fas fa-{% if category == 'sonido' %}music{% elif category == 'bebidas' %}glass-cheers{% elif category == 'magia' %}hat-wizard{% elif category == 'comida' %}utensils{% elif category == 'fotografias' %}camera{% elif category == 'decoracion' %}paint-brush{% elif category == 'postres' %}ice-cream{% elif category == 'infantil' %}child{% else %}star{% endif %}"></i>
+                    </div>
+                    <div class="service-info">
+                        <div class="service-name">{{ Nombre del servicio }}</div>
+                        <div class="service-description">{{ Descripcion del servicio }}</div>
+                        <div class="service-rating">
+                            El servicio puede ser para banquetes
+                                {, eventos de bodas,}
+                                    <i class="fas fa-star"></i>
+                                {fiestas infantiles}
+                                    <i class="fas fa-star-half-alt"></i>
+                                {fiestas de 15 años}
+                                    <i class="far fa-star"></i>
+                                {,el evento que requieras}
+                            {nosotros}
+                            {{ lo tenemosecho "# proyectopiloto.py" >> README.md
+git init
+git add README.md
+git commit -m "first commit"
+git branch -M main
+git remote add origin https://github.com/Vectorwar/proyectopiloto.py.git
+git push -u origin main }}
+                        </div>
+                        <div class="service-price">{{Precio por el servicio }}</div>
+                    </div>
+                </div>
+                <div class="service-action">
+                    <a href="{{ url_for('service_detail', service_id=service.id) }}" class="view-details">
+                        Ver detalles <i class="fas fa-angle-right"></i>
+                    </a>
+                    <button class="add-to-cart" onclick="addToCart({{ service.id }})">
+                        Agregar <i class="fas fa-plus"></i>
+                    </button>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="success-message" id="success-message">
+        Agregado al carrito
+    </div>
+
+    <div class="footer">
+        <a href="{{ url_for('home') }}" class="footer-icon">
+            <i class="fas fa-home"></i>
+            <span class="footer-text">Inicio</span>
+        </a>
+        <a href="#" class="footer-icon">
+            <i class="fas fa-calendar-alt"></i>
+            <span class="footer-text">Eventos</span>
+        </a>
+        <a href="{{ url_for('view_cart') }}" class="footer-icon">
+            <i class="fas fa-shopping-cart"></i>
+            <span class="footer-text">Carrito</span>
+        </a>
+        <a href="#" class="footer-icon">
+            <i class="fas fa-user"></i>
+            <span class="footer-text">Perfil</span>
+        </a>
+    </div>
+
+    <script>
+        // Función para agregar servicios al carrito
+        function addToCart(serviceId) {
+            fetch(`/add_to_cart/${serviceId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Mostrar mensaje de éxito
+                    const message = document.getElementById('success-message');
+                    message.style.display = 'block';
+                    setTimeout(() => {
+                        message.style.display = 'none';
+                    }, 2000);
+
+                    // Actualizar contador del carrito
+                    const cartBadges = document.querySelectorAll('.cart-badge');
+                    cartBadges.forEach(badge => {
+                        const cartIcon = badge.parentElement;
+                        if (data.cart_count > 0) {
+                            if (badge) {
+                                badge.textContent = data.cart_count;
+                            } else {
+                                const newBadge = document.createElement('span');
+                                newBadge.className = 'cart-badge';
+                                newBadge.textContent = data.cart_count;
+                                cartIcon.appendChild(newBadge);
+                            }
+                        }
+                    });
+                }
+            });
+        }
+    </script>
+</body>
+</html>
